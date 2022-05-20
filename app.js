@@ -1,25 +1,32 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const morgan = require("morgan");
-const connectDB = require("./config/db");
+import morgan from "morgan";
+import connectDB from "./config/db.js";
+// const { makeDb } = require("mysql-async-simple");
 
-const loginRoutes = require("./routes/loginRoutes");
+import loginRoutes from "./routes/loginRoutes.js";
 
 // import loginRoutes from "./routes/loginRoutes";
 
 // ----------------------------------
-// connectDB;
+connectDB;
+
+app.use(express.json());
+
+// global.con = require("./connection");
+// global.db = makeDb();
 
 app.use(morgan("dev"));
 
 // Routes
-app.use("/login", loginRoutes);
-app.get("/api", (req, res, next) => {
-  res.status(200).send("API");
-});
+app.use("/api", loginRoutes);
+// app.get("/api", (req, res, next) => {
+//   res.status(200).send("API");
+// });
 
+// --------------------------------------
 app.use((req, res, next) => {
-  const error = new Error("Not Found");
+  const error = new Error("Page Not Found");
   error.status = 404;
   next(error);
 });
@@ -33,4 +40,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-module.exports = app;
+// module.exports = app;
+
+export default app;

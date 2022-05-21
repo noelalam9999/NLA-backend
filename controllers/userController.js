@@ -20,9 +20,9 @@ const authUser = asyncHandler(async (req, res) => {
   let sql = "SELECT * FROM user WHERE username = ?";
 
   connectDB.query(sql, username, async function databaseQueryFunc(err, rows) {
-    if (rows) {
+    if (rows.length) {
       var userHashedPassword = rows[0].password;
-      //   res.send(userPassword);
+
       if (await matchPassword(password, userHashedPassword)) {
         res.json({
           id: rows[0].id,
@@ -32,8 +32,12 @@ const authUser = asyncHandler(async (req, res) => {
         });
       } else {
         res.status(401);
-        throw new Error("Invalid username or password");
+        res.json({ status: "failed", msg: "Invalid email or password" });
+        // throw new Error("Invalid email or password");
       }
+    } else {
+      res.status(401);
+      res.json({ status: "failed", msg: "Invalid email or password" });
     }
   });
 

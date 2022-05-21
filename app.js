@@ -16,8 +16,7 @@ app.use(express.json());
 
 app.use(cors());
 
-// global.con = require("./connection");
-// global.db = makeDb();
+app.options("*", cors());
 
 app.use(morgan("dev"));
 

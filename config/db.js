@@ -11,7 +11,7 @@ import mysql from "mysql";
 let conn;
 
 if (process.env.JAWSDB_URL) {
-  connection = mysql.createConnection(process.env.JAWSDB_URL);
+  conn = mysql.createConnection(process.env.JAWSDB_URL);
 } else {
   conn = mysql.createPool({
     connectionLimit: 10,

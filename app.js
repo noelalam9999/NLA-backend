@@ -1,5 +1,6 @@
 import express from "express";
 const app = express();
+import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 // const { makeDb } = require("mysql-async-simple");
@@ -10,6 +11,14 @@ import loginRoutes from "./routes/loginRoutes.js";
 
 // ----------------------------------
 connectDB;
+
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

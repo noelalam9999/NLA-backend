@@ -8,12 +8,12 @@ import generateToken from "../utills/generateToken.js";
 // @route   GET /api/users/login
 
 const authUser = asyncHandler(async (req, res) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://nla-backend.herokuapp.com"
-  );
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  // res.setHeader(
+  //   "Access-Control-Allow-Origin",
+  //   "https://nla-backend.herokuapp.com"
+  // );
+  // res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+  // res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   const { username, password } = req.body;
 
@@ -36,6 +36,11 @@ const authUser = asyncHandler(async (req, res) => {
       }
     }
   });
+
+  // res.send({
+  //   username,
+  //   password,
+  // });
 });
 
 async function matchPassword(enteredPassword, hashed_pass) {

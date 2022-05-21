@@ -11,6 +11,7 @@ import mysql from "mysql";
 let conn;
 
 if (process.env.JAWSDB_URL) {
+  console.log("I am in JawsDB");
   conn = mysql.createConnection(process.env.JAWSDB_URL);
 } else {
   conn = mysql.createPool({

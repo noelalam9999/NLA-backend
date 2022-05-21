@@ -8,12 +8,12 @@ import mysql from "mysql";
 //   database: "nla_database",
 // });
 
-let connection;
+let conn;
 
 if (process.env.JAWSDB_URL) {
   connection = mysql.createConnection(process.env.JAWSDB_URL);
 } else {
-  var conn = mysql.createPool({
+  conn = mysql.createPool({
     connectionLimit: 10,
     host: "localhost",
     user: "root",

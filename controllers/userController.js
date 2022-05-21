@@ -24,12 +24,36 @@ const authUser = asyncHandler(async (req, res) => {
       var userHashedPassword = rows[0].password;
 
       if (await matchPassword(password, userHashedPassword)) {
-        res.json({
-          id: rows[0].id,
-          username: rows[0].username,
-          password: rows[0].password,
-          token: generateToken(rows[0].id),
+        return res.status(200).json({
+          code: 200,
+          status: "Success",
+          msg: "Passed",
+          data: {
+            id: rows[0].id,
+            username: rows[0].username,
+            password: rows[0].password,
+            token: generateToken(rows[0].id),
+          },
         });
+
+        // res.status(200);
+        // res.json({
+        //   code: 200,
+        //   status: "Success",
+        //   msg: "Passed",
+        //   data: {
+        //     id: rows[0].id,
+        //     username: rows[0].username,
+        //     password: rows[0].password,
+        //     token: generateToken(rows[0].id),
+        //   },
+        // });
+        // res.json({
+        //   id: rows[0].id,
+        //   username: rows[0].username,
+        //   password: rows[0].password,
+        //   token: generateToken(rows[0].id),
+        // });
       } else {
         res.status(401);
         res.json({ status: "failed", msg: "Invalid email or password" });

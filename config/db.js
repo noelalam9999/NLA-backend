@@ -20,6 +20,26 @@ if (process.env.JAWSDB_URL) {
     password: "tiger123",
     database: "nla_database",
   });
+
+  conn.query("SELECT 1 + 3 AS solution", function (error, results, fields) {
+    if (error) {
+      throw error;
+    } else {
+      console.log("Database CONNECTED with solution: ", results[0].solution);
+      // var query = "INSERT INTO user (username, password) VALUES ?";
+      // var values = [
+      //   ["hammad", "asdf123"],
+      //   ["ali", "12345"],
+      // ];
+      // conn.query(query, [values], function (err, result) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log("Total number of rows inserted =", result.affectedRows);
+      //   }
+      // });
+    }
+  });
 }
 
 // var conn = mysql.createPool({
@@ -30,25 +50,5 @@ if (process.env.JAWSDB_URL) {
 //   port: "3306",
 //   database: "	e4fum3snt275n7lx",
 // });
-
-conn.query("SELECT 1 + 3 AS solution", function (error, results, fields) {
-  if (error) {
-    throw error;
-  } else {
-    console.log("Database CONNECTED with solution: ", results[0].solution);
-    // var query = "INSERT INTO user (username, password) VALUES ?";
-    // var values = [
-    //   ["hammad", "asdf123"],
-    //   ["ali", "12345"],
-    // ];
-    // conn.query(query, [values], function (err, result) {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log("Total number of rows inserted =", result.affectedRows);
-    //   }
-    // });
-  }
-});
 
 export default conn;

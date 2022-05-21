@@ -12,17 +12,9 @@ import loginRoutes from "./routes/loginRoutes.js";
 // ----------------------------------
 connectDB;
 
-const corsOptions = {
-  origin: "*",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
+app.use(express.json());
 
 app.use(cors());
-
-app.use(express.json());
 
 // global.con = require("./connection");
 // global.db = makeDb();

@@ -25,6 +25,7 @@ app.use(
 // app.options("*", cors());
 
 app.use(morgan("dev"));
+app.use("/uploads", express.static("uploads"));
 
 // Routes ----------------------------------------------------
 app.use("/api", loginRoutes);

@@ -6,7 +6,7 @@ function userModel() {
     "INSERT INTO project (user_id, project_name, slug, type_of_project, client_name, product_name, project_version, company_logo, pin_project) VALUES ?";
   var values = [
     [
-      1,
+      3,
       "Tayyab's Project 1",
       "project",
       "From Heroku",

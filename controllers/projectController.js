@@ -30,7 +30,11 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Ada a project
+// @route   GET /api/add/projetc
+
 const addProject = asyncHandler(async (req, res) => {
+  // console.log("\nreq.file: ", req.file);
   const {
     user_id,
     project_name,
@@ -39,9 +43,11 @@ const addProject = asyncHandler(async (req, res) => {
     client_name,
     product_name,
     project_version,
-    company_logo,
     pin_project,
   } = req.body;
+
+  const company_logo = req.file.path;
+  console.log("\ncompanyLogo: ", company_logo);
 
   var query =
     "INSERT INTO project (user_id, project_name, slug, type_of_project, client_name, product_name, project_version, company_logo, pin_project) VALUES ?";

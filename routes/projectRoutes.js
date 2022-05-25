@@ -16,9 +16,9 @@ router.post("/add/project", addProject);
 router.route("/projects").get(getProjects);
 router.route("/project/:id").get(getProjectByUserId);
 
-// router.get("/add/projects", (req, res, next) => {
-//   projectModel();
-//   res.status(200).send("New rows inserted into Database..");
-// });
+router.get("/add/projects", (req, res, next) => {
+  projectModel();
+  res.status(200).send("New rows inserted into Database..");
+});
 
 export default router;

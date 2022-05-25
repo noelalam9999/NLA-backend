@@ -7,8 +7,7 @@ import connectDB from "./config/db.js";
 // const { makeDb } = require("mysql-async-simple");
 
 import loginRoutes from "./routes/loginRoutes.js";
-
-// import loginRoutes from "./routes/loginRoutes";
+import projectRoutes from "./routes/projectRoutes.js";
 
 // ----------------------------------
 connectDB;
@@ -29,6 +28,7 @@ app.use(morgan("dev"));
 
 // Routes ----------------------------------------------------
 app.use("/api", loginRoutes);
+app.use("/api", projectRoutes);
 // app.get("/api", (req, res, next) => {
 //   res.status(200).send("API");
 // });

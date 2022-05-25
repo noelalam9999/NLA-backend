@@ -2,7 +2,8 @@ import mysql from "mysql";
 import connectDB from "../config/db.js";
 
 function userModel() {
-  var query = "INSERT INTO project (user_id, project_name, slug ) VALUES ?";
+  var query =
+    "INSERT INTO project (user_id, project_name, slug, type_of_project, client_name, product_name, project_version, company_logo, pin_project) VALUES ?";
   var values = [
     [
       1,

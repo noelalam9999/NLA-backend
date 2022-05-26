@@ -35,8 +35,8 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
 
 const addProject = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
   // console.log("\nreq.file: ", req.file);
   const {
     user_id,

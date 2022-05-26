@@ -35,7 +35,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.post("/add/project", upload.single("company_logo"), addProject);
 router.route("/projects").get(getProjects);
-router.route("/project/:id").get(getProjectByUserId);
+router.route("/projects/:id").get(getProjectByUserId);
 
 // router.get("/add/projects", (req, res, next) => {
 //   projectModel();

@@ -17,7 +17,7 @@ const authUser = asyncHandler(async (req, res) => {
   let sql = "SELECT * FROM user WHERE username = ?";
 
   connectDB.query(sql, username, async function databaseQueryFunc(err, rows) {
-    if (rows.length) {
+    if (rows?.length) {
       var userHashedPassword = rows[0].password;
 
       if (await matchPassword(password, userHashedPassword)) {

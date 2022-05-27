@@ -7,7 +7,10 @@ import projectModel from "../models/projectModel.js";
 import {
   getProjects,
   getProjectByUserId,
+  getProjectByName,
   addProject,
+  getProjectByDate,
+  getProjectByDateAndName,
 } from "../controllers/projectController.js";
 
 // -----------------------------------------------------------
@@ -36,6 +39,12 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post("/add/project", upload.single("company_logo"), addProject);
 router.route("/projects").get(getProjects);
 router.route("/projects/:id").get(getProjectByUserId);
+
+router.post("/project/name", getProjectByName);
+
+router.post("/project/date", getProjectByDate);
+
+router.post("/project/search", getProjectByDateAndName);
 
 // router.get("/add/projects", (req, res, next) => {
 //   projectModel();

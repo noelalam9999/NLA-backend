@@ -31,6 +31,91 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Fecth projects with Project Name
+// @route   POST /api/project/project_name
+
+const getProjectByName = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
+  const { project_name } = req.body;
+
+  let sql = "SELECT * FROM project WHERE project_name = ?";
+  connectDB.query(sql, project_name, function (err, rows) {
+    if (err) {
+      throw err;
+    } else {
+      if (!rows.length) {
+        res.json({ status: "failed", msg: "No record found" });
+      } else {
+        res.send(rows);
+      }
+
+      // res.send({
+      //   project_name,
+      // });
+    }
+  });
+});
+
+// @desc    Filter projects with date
+// @route   POST /api/project/date
+
+const getProjectByDate = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
+  const { project_date } = req.body;
+
+  let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
+  connectDB.query(sql, project_date, function (err, rows) {
+    if (err) {
+      throw err;
+    } else {
+      if (!rows.length) {
+        res.json({ status: "failed", msg: "No record found" });
+      } else {
+        res.send(rows);
+      }
+
+      // res.send({
+      //   project_date,
+      // });
+    }
+  });
+});
+
+// @desc    Filter projects with date
+// @route   POST /api/project/date
+
+const getProjectByDateAndName = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
+  const { project_name, project_date } = req.body;
+
+  let sql = `SELECT * FROM project WHERE project_name LIKE '${project_name}' AND DATE(date_created) LIKE '${project_date}'`;
+  connectDB.query(sql, function (err, rows) {
+    if (err) {
+      throw err;
+    } else {
+      if (!rows.length) {
+        res.json({ status: "failed", msg: "No record found" });
+      } else {
+        res.send(rows);
+        // res.json({ status: "failed", msg: "No record found" });
+      }
+
+      // res.send({
+      //   project_name,
+      // });
+    }
+  });
+});
+
 // @desc    Ada a project
 // @route   GET /api/add/projetc
 
@@ -88,4 +173,11 @@ const addProject = asyncHandler(async (req, res) => {
   //   res.send("I am working");
 });
 
-export { getProjects, getProjectByUserId, addProject };
+export {
+  getProjects,
+  getProjectByUserId,
+  getProjectByName,
+  addProject,
+  getProjectByDate,
+  getProjectByDateAndName,
+};

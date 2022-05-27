@@ -26,10 +26,10 @@ const authUser = asyncHandler(async (req, res) => {
           status: "Success",
           msg: "Passed",
           data: {
-            id: rows[0].id,
+            user_id: rows[0].user_id,
             username: rows[0].username,
             password: rows[0].password,
-            token: generateToken(rows[0].id),
+            token: generateToken(rows[0].user_id),
           },
         });
 
@@ -80,7 +80,7 @@ async function matchPassword(enteredPassword, hashed_pass) {
 const getUserProfile = asyncHandler(async (req, res) => {
   //   userID = req.user.id;
   //   console.log("before sql", req.user.id);
-  let sql = "SELECT * FROM user WHERE id = ?";
+  let sql = "SELECT * FROM user WHERE user_id = ?";
   connectDB.query(
     sql,
     [req.user.id],
@@ -117,7 +117,7 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   GET /api/users/id
 
 const getUserById = asyncHandler(async (req, res) => {
-  let sql = "SELECT * FROM user WHERE id = ?";
+  let sql = "SELECT * FROM user WHERE user_id = ?";
   connectDB.query(sql, [req.params.id], function (err, rows) {
     if (err) {
       throw err;

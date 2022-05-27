@@ -3,7 +3,6 @@ import connectDB from "../config/db.js";
 
 // -----------------------------------------------------------------------------------------
 
-//
 // @desc    Fecth all projects
 // @route   GET /api/projects
 

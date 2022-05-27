@@ -1,6 +1,6 @@
 {
   "name": "nla_project",
-  "proxy": "https://nla-backend.herokuapp.com",
+  "proxy": "https://nla-backend-1.herokuapp.com",
   "version": "1.0.0",
   "description": "Node.js Project",
   "main": "index.js",

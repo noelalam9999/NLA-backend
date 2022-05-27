@@ -3,7 +3,7 @@ import connectDB from "../config/db.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utills/generateToken.js";
 
-// --------------------------------------------------------
+// ------------------------------------------------------
 // @desc    Auth user & get token
 // @route   GET /api/users/login
 

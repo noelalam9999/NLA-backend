@@ -45,7 +45,7 @@ const getProjectByName = asyncHandler(async (req, res) => {
     if (err) {
       throw err;
     } else {
-      if (!rows.length) {
+      if (!rows?.length) {
         res.json({ status: "failed", msg: "No record found" });
       } else {
         res.send(rows);
@@ -73,7 +73,7 @@ const getProjectByDate = asyncHandler(async (req, res) => {
     if (err) {
       throw err;
     } else {
-      if (!rows.length) {
+      if (!rows?.length) {
         res.json({ status: "failed", msg: "No record found" });
       } else {
         res.send(rows);
@@ -101,7 +101,7 @@ const getProjectByDateAndName = asyncHandler(async (req, res) => {
     if (err) {
       throw err;
     } else {
-      if (!rows.length) {
+      if (!rows?.length) {
         res.json({ status: "failed", msg: "No record found" });
       } else {
         res.send(rows);

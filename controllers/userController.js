@@ -87,7 +87,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     async function databaseQueryFunc(err, rows) {
       if (rows) {
         res.json({
-          id: rows[0].id,
+          user_id: rows[0].user_id,
           username: rows[0].username,
           password: rows[0].password,
         });

@@ -6,11 +6,15 @@ import projectModel from "../models/projectModel.js";
 
 import {
   getProjects,
+  addPinnedProject,
+  addUnPinnedProject,
   getProjectByUserId,
   getProjectByName,
   addProject,
   getProjectByDate,
   getProjectByDateAndName,
+  getPinnedProjects,
+  getUnPinnedProjects,
 } from "../controllers/projectController.js";
 
 // -----------------------------------------------------------
@@ -36,15 +40,23 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // -----------------------------------------------------------
 
+//Add Project
 router.post("/add/project", upload.single("company_logo"), addProject);
+router.post("/add/project/pinned", addPinnedProject);
+router.post("/add/project/unpinned", addUnPinnedProject);
+
+//Get Projects
 router.route("/projects").get(getProjects);
 router.route("/projects/:id").get(getProjectByUserId);
+router.route("/project/pinned").get(getPinnedProjects);
+router.route("/project/unpinned").get(getUnPinnedProjects);
 
+//Project Filtering
 router.post("/project/name", getProjectByName);
-
 router.post("/project/date", getProjectByDate);
-
 router.post("/project/search", getProjectByDateAndName);
+
+// router.post("/project/pinned", getPinnedProjects);
 
 // router.get("/add/projects", (req, res, next) => {
 //   projectModel();

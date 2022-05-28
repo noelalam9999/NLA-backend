@@ -68,7 +68,7 @@ const getProjectByDate = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  const { project_date } = req.body;
+  const { project_date, user_id } = req.body;
 
   // let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
   // let sql = `SELECT * FROM project WHERE DATE(date_created) LIKE '%${project_date}%'`;

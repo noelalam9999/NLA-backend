@@ -40,8 +40,10 @@ const getProjectByName = asyncHandler(async (req, res) => {
 
   const { project_name } = req.body;
 
-  let sql = "SELECT * FROM project WHERE project_name = ?";
-  connectDB.query(sql, project_name, function (err, rows) {
+  // let sql = `SELECT * FROM project WHERE project_name LIKE '${project_name}'`;
+  let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%'`;
+
+  connectDB.query(sql, function (err, rows) {
     if (err) {
       throw err;
     } else {
@@ -68,8 +70,9 @@ const getProjectByDate = asyncHandler(async (req, res) => {
 
   const { project_date } = req.body;
 
-  let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
-  connectDB.query(sql, project_date, function (err, rows) {
+  // let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
+  let sql = `SELECT * FROM project WHERE DATE(date_created) LIKE '%${project_date}%'`;
+  connectDB.query(sql, function (err, rows) {
     if (err) {
       throw err;
     } else {
@@ -96,7 +99,7 @@ const getProjectByDateAndName = asyncHandler(async (req, res) => {
 
   const { project_name, project_date } = req.body;
 
-  let sql = `SELECT * FROM project WHERE project_name LIKE '${project_name}' AND DATE(date_created) LIKE '${project_date}'`;
+  let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%'`;
   connectDB.query(sql, function (err, rows) {
     if (err) {
       throw err;
@@ -164,7 +167,7 @@ const getUnPinnedProjects = asyncHandler(async (req, res) => {
 // @desc    Add a Pinned Project
 // @route   POST /api/project/date
 
-const addPinnedProject = asyncHandler(async (req, res) => {
+const pinOrUnpinProject = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
@@ -181,8 +184,16 @@ const addPinnedProject = asyncHandler(async (req, res) => {
         res.json({ status: "failed", msg: "No record found" });
       } else {
         if (rows[0]?.pin_project == 1) {
-          res.json({ status: "failed", msg: "Project is already pinned" });
-        } else {
+          // res.json({ status: "failed", msg: "Project is already pinned" });
+          let sql = `UPDATE project SET pin_project = 0 WHERE project_id = '${project_id}'`;
+          connectDB.query(sql, function (err, rows) {
+            if (err) {
+              throw err;
+            } else {
+              res.status(200).send("Unpinned Project Successfully");
+            }
+          });
+        } else if (rows[0]?.pin_project == 0) {
           let sql = `UPDATE project SET pin_project = 1 WHERE project_id = '${project_id}'`;
           connectDB.query(sql, function (err, rows) {
             if (err) {
@@ -191,6 +202,8 @@ const addPinnedProject = asyncHandler(async (req, res) => {
               res.status(200).send("Pinned Project Successfully");
             }
           });
+        } else {
+          res.json({ status: "failed", msg: "Unable to Pin" });
         }
       }
     }
@@ -294,7 +307,7 @@ const addProject = asyncHandler(async (req, res) => {
 
 export {
   addProject,
-  addPinnedProject,
+  pinOrUnpinProject,
   getProjects,
   getProjectByUserId,
   getProjectByName,

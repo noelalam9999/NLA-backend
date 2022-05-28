@@ -6,7 +6,7 @@ import projectModel from "../models/projectModel.js";
 
 import {
   getProjects,
-  addPinnedProject,
+  pinOrUnpinProject,
   addUnPinnedProject,
   getProjectByUserId,
   getProjectByName,
@@ -42,8 +42,8 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 //Add Project
 router.post("/add/project", upload.single("company_logo"), addProject);
-router.post("/add/project/pinned", addPinnedProject);
-router.post("/add/project/unpinned", addUnPinnedProject);
+router.post("/pin/project", pinOrUnpinProject);
+// router.post("/add/project/unpinned", addUnPinnedProject);
 
 //Get Projects
 router.route("/projects").get(getProjects);

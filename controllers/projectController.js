@@ -38,10 +38,10 @@ const getProjectByName = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  const { project_name } = req.body;
+  const { user_id, project_name } = req.body;
 
-  // let sql = `SELECT * FROM project WHERE project_name LIKE '${project_name}'`;
-  let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%'`;
+  // let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%'`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%'`;
 
   connectDB.query(sql, function (err, rows) {
     if (err) {
@@ -71,7 +71,9 @@ const getProjectByDate = asyncHandler(async (req, res) => {
   const { project_date } = req.body;
 
   // let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
-  let sql = `SELECT * FROM project WHERE DATE(date_created) LIKE '%${project_date}%'`;
+  // let sql = `SELECT * FROM project WHERE DATE(date_created) LIKE '%${project_date}%'`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND DATE(date_created) LIKE '%${project_date}%'`;
+
   connectDB.query(sql, function (err, rows) {
     if (err) {
       throw err;
@@ -97,9 +99,11 @@ const getProjectByDateAndName = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  const { project_name, project_date } = req.body;
+  const { user_id, project_name, project_date } = req.body;
 
-  let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%'`;
+  // let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%'`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%'`;
+
   connectDB.query(sql, function (err, rows) {
     if (err) {
       throw err;

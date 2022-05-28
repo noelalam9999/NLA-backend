@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://nla-frontend-1.herokuapp.com",
     // credentials: true,
   })
 );

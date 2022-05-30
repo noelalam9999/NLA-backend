@@ -5,8 +5,8 @@ import bcrypt from "bcryptjs";
 function userModel() {
   var query = "INSERT INTO user (username, password) VALUES ?";
   var values = [
-    ["qasim", bcrypt.hashSync("asdfg123", 10)],
-    ["habib", bcrypt.hashSync("12345", 10)],
+    ["nla@gmail.com", bcrypt.hashSync("asdfg123", 10)],
+    ["habib@gmail.com", bcrypt.hashSync("12345", 10)],
   ];
   connectDB.query(query, [values], function (err, result) {
     if (err) {

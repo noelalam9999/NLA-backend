@@ -14,18 +14,75 @@ const getProjects = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Fecth projects with user id
-// @route   GET /api/project/user_id
+// @desc    Fecth projects with project id
+// @route   GET /api/project/project_id
 
-const getProjectByUserId = asyncHandler(async (req, res) => {
-  let sql = "SELECT * FROM project WHERE user_id = ?";
-  connectDB.query(sql, [req.params.id], function (err, rows) {
+const getProjectByProjectId = asyncHandler(async (req, res) => {
+  let sql = "SELECT * FROM project WHERE project_id = ?";
+  connectDB.query(sql, [req.params.project_id], function (err, rows) {
     if (err) {
       throw err;
     } else {
       res.send(rows);
-      //   res.send(rows[0].password);
-      //   console.log("Hey", rows[0].id);
+    }
+  });
+});
+
+// @desc    Fecth projects with user id
+// @route   GET /api/project/user_id
+
+const getProjectByUserId = asyncHandler(async (req, res) => {
+  const resultsPerPage = 5;
+  let sql =
+    "SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC";
+  connectDB.query(sql, [req.params.id], function (err, rows) {
+    if (err) {
+      throw err;
+    } else {
+      const numberOfResults = rows.length;
+      const numberOfPages = Math.ceil(numberOfResults / resultsPerPage);
+      let page = req.query.page ? Number(req.query.page) : 1;
+      if (page > numberOfPages) {
+        res.send("/?page=" + encodeURIComponent(numberOfPages));
+      } else if (page < 1) {
+        res.send("/?page=" + encodeURIComponent("1"));
+      }
+
+      const startingLimit = (page - 1) * resultsPerPage;
+
+      let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC LIMIT ${startingLimit}, ${resultsPerPage}`;
+
+      connectDB.query(sql, [req.params.id], function (err, rows) {
+        if (err) {
+          throw err;
+        } else {
+          if (err) throw err;
+          let iterator = page - 5 < 1 ? 1 : page - 5;
+          let endingLink =
+            iterator + 9 <= numberOfPages
+              ? iterator + 9
+              : page + (numberOfPages - page);
+
+          if (endingLink < page + 4) {
+            iterator -= page + 4 - numberOfPages;
+          }
+          // res.render('index', {data: result, page, iterator, endingLink, numberOfPages});
+          // res.send({ data: rows, page, iterator, endingLink, numberOfPages });
+          const data = {
+            page,
+            iterator,
+            endingLink,
+            numberOfPages,
+          };
+          res.send({
+            rows: rows,
+            pagination: data,
+          });
+          // res.send(rows);
+        }
+      });
+
+      // res.send(rows);
     }
   });
 });
@@ -34,6 +91,8 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
 // @route   POST /api/project/project_name
 
 const getProjectByName = asyncHandler(async (req, res) => {
+  const resultsPerPage = 5;
+
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
@@ -41,7 +100,7 @@ const getProjectByName = asyncHandler(async (req, res) => {
   const { user_id, project_name } = req.body;
 
   // let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%'`;
-  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%'`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' ORDER BY date_created DESC`;
 
   connectDB.query(sql, function (err, rows) {
     if (err) {
@@ -50,12 +109,50 @@ const getProjectByName = asyncHandler(async (req, res) => {
       if (!rows?.length) {
         res.json({ status: "failed", msg: "No record found" });
       } else {
-        res.send(rows);
-      }
+        const numOfResults = rows.length;
+        const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
+        let page = req.query.page ? Number(req.query.page) : 1;
+        if (page > numberOfPages) {
+          res.redirect("/?page=" + encodeURIComponent(numberOfPages));
+        } else if (page < 1) {
+          res.redirect("/?page=" + encodeURIComponent("1"));
+        }
+        // res.send(rows);
 
-      // res.send({
-      //   project_name,
-      // });
+        const startingLimit = (page - 1) * resultsPerPage;
+
+        let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' ORDER BY date_created DESC LIMIT ${startingLimit}, ${resultsPerPage}`;
+
+        connectDB.query(sql, function (err, rows) {
+          if (err) {
+            throw err;
+          } else {
+            if (err) throw err;
+            let iterator = page - 5 < 1 ? 1 : page - 5;
+            let endingLink =
+              iterator + 9 <= numberOfPages
+                ? iterator + 9
+                : page + (numberOfPages - page);
+
+            if (endingLink < page + 4) {
+              iterator -= page + 4 - numberOfPages;
+            }
+            // res.render('index', {data: result, page, iterator, endingLink, numberOfPages});
+            // res.send({ data: rows, page, iterator, endingLink, numberOfPages });
+            const data = {
+              page,
+              iterator,
+              endingLink,
+              numberOfPages,
+            };
+            res.send({
+              rows: rows,
+              pagination: data,
+            });
+            // res.send(rows);
+          }
+        });
+      }
     }
   });
 });
@@ -72,7 +169,7 @@ const getProjectByDate = asyncHandler(async (req, res) => {
 
   // let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
   // let sql = `SELECT * FROM project WHERE DATE(date_created) LIKE '%${project_date}%'`;
-  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND DATE(date_created) LIKE '%${project_date}%'`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND DATE(date_created) LIKE '%${project_date}%' ORDER BY date_created DESC`;
 
   connectDB.query(sql, function (err, rows) {
     if (err) {
@@ -102,7 +199,7 @@ const getProjectByDateAndName = asyncHandler(async (req, res) => {
   const { user_id, project_name, project_date } = req.body;
 
   // let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%'`;
-  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%'`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' AND DATE(date_created) LIKE '%${project_date}%' ORDER BY date_created DESC`;
 
   connectDB.query(sql, function (err, rows) {
     if (err) {
@@ -252,8 +349,8 @@ const addUnPinnedProject = asyncHandler(async (req, res) => {
 
 // ----------------------------------------------------------------------------------------------------------------------
 
-// @desc    Ada a project
-// @route   GET /api/add/projetc
+// @desc    Add a project
+// @route   GET /api/add/project
 
 const addProject = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -309,11 +406,49 @@ const addProject = asyncHandler(async (req, res) => {
   //   res.send("I am working");
 });
 
+// @desc    Edit a project
+// @route   GET /api/edit/project
+
+const editProject = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  // console.log("\nreq.file: ", req.file);
+  const {
+    project_name,
+    type_of_project,
+    client_name,
+    product_name,
+    project_id,
+  } = req.body;
+
+  const company_logo = req.file.path;
+  console.log("\ncompanyLogo: ", company_logo);
+
+  var query = `UPDATE project SET project_name = '${project_name}', type_of_project = '${type_of_project}', client_name = '${client_name}', product_name = '${product_name}', company_logo = '${company_logo}' WHERE project_id = '${project_id}'`;
+
+  connectDB.query(query, function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(
+        "Project Edited successfully, Total rows inserted =",
+        result.affectedRows
+      );
+      res.status(200).send("Project Edited successfully");
+    }
+  });
+});
+
+// ***********
+
 export {
   addProject,
+  editProject,
   pinOrUnpinProject,
   getProjects,
   getProjectByUserId,
+  getProjectByProjectId,
   getProjectByName,
   getProjectByDate,
   getProjectByDateAndName,

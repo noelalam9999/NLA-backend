@@ -12,11 +12,11 @@ const authUser = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  let sql = "SELECT * FROM user WHERE username = ?";
+  let sql = "SELECT * FROM user WHERE email = ?";
 
-  connectDB.query(sql, username, async function databaseQueryFunc(err, rows) {
+  connectDB.query(sql, email, async function databaseQueryFunc(err, rows) {
     if (rows?.length) {
       var userHashedPassword = rows[0].password;
 
@@ -27,7 +27,7 @@ const authUser = asyncHandler(async (req, res) => {
           msg: "Passed",
           data: {
             user_id: rows[0].user_id,
-            username: rows[0].username,
+            email: rows[0].email,
             password: rows[0].password,
             token: generateToken(rows[0].user_id),
           },

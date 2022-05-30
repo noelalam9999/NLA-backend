@@ -406,7 +406,7 @@ const addProject = asyncHandler(async (req, res) => {
   //   res.send("I am working");
 });
 
-// @desc    Edit a project
+// @descd    Edit a project
 // @route   GET /api/edit/project
 
 const editProject = asyncHandler(async (req, res) => {

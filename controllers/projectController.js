@@ -32,7 +32,11 @@ const getProjectByProjectId = asyncHandler(async (req, res) => {
 // @route   GET /api/project/user_id
 
 const getProjectByUserId = asyncHandler(async (req, res) => {
-  const resultsPerPage = 5;
+  // const page = parseInt(req.query.page);
+  let page = req.query.page ? Number(req.query.page) : 1;
+  const limit = parseInt(req.query.limit);
+  // const resultsPerPage = 5;
+
   let sql =
     "SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC";
   connectDB.query(sql, [req.params.id], function (err, rows) {
@@ -40,21 +44,43 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
       throw err;
     } else {
       const numberOfResults = rows.length;
-      const numberOfPages = Math.ceil(numberOfResults / resultsPerPage);
-      let page = req.query.page ? Number(req.query.page) : 1;
+      const numberOfPages = Math.ceil(numberOfResults / limit);
+      //
       if (page > numberOfPages) {
         res.send("/?page=" + encodeURIComponent(numberOfPages));
       } else if (page < 1) {
         res.send("/?page=" + encodeURIComponent("1"));
       }
 
-      const startingLimit = (page - 1) * resultsPerPage;
+      // const startingLimit = (page - 1) * limit;
 
-      let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC LIMIT ${startingLimit}, ${resultsPerPage}`;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const results = {};
+
+      if (endIndex < rows.length) {
+        results.next = {
+          page: page + 1,
+          limit: limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit: limit,
+        };
+      }
+
+      // const user_id = req.params.id;
+
+      let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC LIMIT ${startIndex}, ${endIndex}`;
 
       connectDB.query(sql, [req.params.id], function (err, rows) {
         if (err) {
-          throw err;
+          callback(error, null);
+          return;
         } else {
           if (err) throw err;
           let iterator = page - 5 < 1 ? 1 : page - 5;
@@ -66,13 +92,13 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
           if (endingLink < page + 4) {
             iterator -= page + 4 - numberOfPages;
           }
-          // res.render('index', {data: result, page, iterator, endingLink, numberOfPages});
-          // res.send({ data: rows, page, iterator, endingLink, numberOfPages });
+
           const data = {
             page,
             iterator,
             endingLink,
             numberOfPages,
+            results,
           };
           res.send({
             rows: rows,
@@ -87,17 +113,67 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
   });
 });
 
+// const getProjectByUserId = asyncHandler(async (req, res) => {
+//   const page = parseInt(req.query.page);
+//   const limit = parseInt(req.query.limit);
+//   // const resultsPerPage = 5;
+//   let sql =
+//     "SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC";
+//   connectDB.query(sql, [req.params.id], function (err, rows) {
+//     if (err) {
+//       throw err;
+//     } else {
+//       const startIndex = (page - 1) * limit;
+//       const endIndex = page * limit;
+
+//       const results = {};
+
+//       console.log("Projects: ", rows.length);
+
+//       if (endIndex < rows.length) {
+//         results.next = {
+//           page: page + 1,
+//           limit: limit,
+//         };
+//       }
+
+//       if (startIndex > 0) {
+//         results.previous = {
+//           page: page - 1,
+//           limit: limit,
+//         };
+//       }
+
+//       let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC LIMIT ${startIndex}, ${endIndex}`;
+
+//       connectDB.query(sql, [req.params.id], function (err, rows) {
+//         if (err) {
+//           throw err;
+//         } else {
+//           res.send({
+//             rows: rows,
+//             pagination: results,
+//           });
+//         }
+//       });
+
+//       // res.send(rows);
+//     }
+//   });
+// });
+
 // @desc    Fecth projects with Project Name
 // @route   POST /api/project/project_name
 
 const getProjectByName = asyncHandler(async (req, res) => {
-  const resultsPerPage = 5;
-
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
   const { user_id, project_name } = req.body;
+
+  let page = req.query.page ? Number(req.query.page) : 1;
+  const limit = parseInt(req.query.limit);
 
   // let sql = `SELECT * FROM project WHERE project_name LIKE '%${project_name}%'`;
   let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' ORDER BY date_created DESC`;
@@ -109,19 +185,37 @@ const getProjectByName = asyncHandler(async (req, res) => {
       if (!rows?.length) {
         res.json({ status: "failed", msg: "No record found" });
       } else {
-        const numOfResults = rows.length;
-        const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
-        let page = req.query.page ? Number(req.query.page) : 1;
+        const numberOfResults = rows.length;
+        const numberOfPages = Math.ceil(numberOfResults / limit);
+        //
         if (page > numberOfPages) {
-          res.redirect("/?page=" + encodeURIComponent(numberOfPages));
+          res.send("/?page=" + encodeURIComponent(numberOfPages));
         } else if (page < 1) {
-          res.redirect("/?page=" + encodeURIComponent("1"));
+          res.send("/?page=" + encodeURIComponent("1"));
         }
-        // res.send(rows);
 
-        const startingLimit = (page - 1) * resultsPerPage;
+        // const startingLimit = (page - 1) * limit;
 
-        let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' ORDER BY date_created DESC LIMIT ${startingLimit}, ${resultsPerPage}`;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        const results = {};
+
+        if (endIndex < rows.length) {
+          results.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          results.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+
+        let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND project_name LIKE '%${project_name}%' ORDER BY date_created DESC LIMIT ${startIndex}, ${endIndex}`;
 
         connectDB.query(sql, function (err, rows) {
           if (err) {
@@ -137,13 +231,13 @@ const getProjectByName = asyncHandler(async (req, res) => {
             if (endingLink < page + 4) {
               iterator -= page + 4 - numberOfPages;
             }
-            // res.render('index', {data: result, page, iterator, endingLink, numberOfPages});
-            // res.send({ data: rows, page, iterator, endingLink, numberOfPages });
+
             const data = {
               page,
               iterator,
               endingLink,
               numberOfPages,
+              results,
             };
             res.send({
               rows: rows,
@@ -229,15 +323,83 @@ const getPinnedProjects = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  let sql = "SELECT * FROM project WHERE pin_project = 1";
+  let page = req.query.page ? Number(req.query.page) : 1;
+  const limit = parseInt(req.query.limit);
+
+  const { user_id } = req.body;
+
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND pin_project = 1 ORDER BY pin_project_date DESC`;
+
   connectDB.query(sql, function (err, rows) {
     if (err) {
-      throw err;
+      callback(error, null);
+      return;
     } else {
       if (!rows?.length) {
-        res.json({ status: "failed", msg: "No record found" });
+        res.json({ status: "failed", msg: "No pinned projects" });
+        return;
       } else {
-        res.send(rows);
+        const numberOfResults = rows.length;
+        const numberOfPages = Math.ceil(numberOfResults / limit);
+        //
+        if (page > numberOfPages) {
+          res.send("/?page=" + encodeURIComponent(numberOfPages));
+        } else if (page < 1) {
+          res.send("/?page=" + encodeURIComponent("1"));
+        }
+
+        // const startingLimit = (page - 1) * limit;
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        const results = {};
+
+        if (endIndex < rows.length) {
+          results.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          results.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+
+        let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND pin_project = 1 ORDER BY pin_project_date DESC LIMIT ${startIndex}, ${endIndex}`;
+
+        connectDB.query(sql, function (err, rows) {
+          if (err) {
+            callback(error, null);
+            return;
+          } else {
+            if (err) throw err;
+            let iterator = page - 5 < 1 ? 1 : page - 5;
+            let endingLink =
+              iterator + 9 <= numberOfPages
+                ? iterator + 9
+                : page + (numberOfPages - page);
+
+            if (endingLink < page + 4) {
+              iterator -= page + 4 - numberOfPages;
+            }
+
+            const data = {
+              page,
+              iterator,
+              endingLink,
+              numberOfPages,
+              results,
+            };
+            res.send({
+              rows: rows,
+              pagination: data,
+            });
+          }
+        });
       }
     }
   });
@@ -286,7 +448,7 @@ const pinOrUnpinProject = asyncHandler(async (req, res) => {
       } else {
         if (rows[0]?.pin_project == 1) {
           // res.json({ status: "failed", msg: "Project is already pinned" });
-          let sql = `UPDATE project SET pin_project = 0 WHERE project_id = '${project_id}'`;
+          let sql = `UPDATE project SET pin_project = 0, pin_project_date = 0 WHERE project_id = '${project_id}'`;
           connectDB.query(sql, function (err, rows) {
             if (err) {
               throw err;
@@ -295,7 +457,7 @@ const pinOrUnpinProject = asyncHandler(async (req, res) => {
             }
           });
         } else if (rows[0]?.pin_project == 0) {
-          let sql = `UPDATE project SET pin_project = 1 WHERE project_id = '${project_id}'`;
+          let sql = `UPDATE project SET pin_project = 1, pin_project_date = now() WHERE project_id = '${project_id}'`;
           connectDB.query(sql, function (err, rows) {
             if (err) {
               throw err;

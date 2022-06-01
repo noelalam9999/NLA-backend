@@ -56,8 +56,9 @@ router.post("/pin/project", pinOrUnpinProject);
 router.route("/projects").get(getProjects);
 router.route("/projects/:id").get(getProjectByUserId);
 router.route("/project/:project_id").get(getProjectByProjectId);
-router.route("/project/pinned").get(getPinnedProjects);
-router.route("/project/unpinned").get(getUnPinnedProjects);
+
+router.post("/pinned/projects", getPinnedProjects);
+router.route("/unpinned/projects").get(getUnPinnedProjects);
 
 //Project Filtering
 router.post("/project/name", getProjectByName);

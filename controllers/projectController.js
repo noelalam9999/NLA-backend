@@ -7,6 +7,10 @@ import connectDB from "../config/db.js";
 // @route   GET /api/projects
 
 const getProjects = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
   let sql = "SELECT * FROM PROJECT";
   connectDB.query(sql, function (err, results) {
     if (err) throw err;
@@ -18,6 +22,10 @@ const getProjects = asyncHandler(async (req, res) => {
 // @route   GET /api/project/project_id
 
 const getProjectByProjectId = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
   let sql = "SELECT * FROM project WHERE project_id = ?";
   connectDB.query(sql, [req.params.project_id], function (err, rows) {
     if (err) {
@@ -32,6 +40,10 @@ const getProjectByProjectId = asyncHandler(async (req, res) => {
 // @route   GET /api/project/user_id
 
 const getProjectByUserId = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
   // const page = parseInt(req.query.page);
   let page = req.query.page ? Number(req.query.page) : 1;
   const limit = parseInt(req.query.limit);

@@ -588,6 +588,8 @@ const editProject = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
   // console.log("\nreq.file: ", req.file);
+  console.log("Before Data: ");
+
   const {
     project_name,
     type_of_project,
@@ -596,10 +598,18 @@ const editProject = asyncHandler(async (req, res) => {
     project_id,
   } = req.body;
 
+  console.log("After Data: ");
+
   const company_logo = req.file.path;
+  console.log("After company_logo: ");
+
   console.log("\ncompanyLogo: ", company_logo);
 
-  var query = `UPDATE project SET project_name = '${project_name}', type_of_project = '${type_of_project}', client_name = '${client_name}', product_name = '${product_name}', company_logo = '${company_logo}' WHERE project_id = '${project_id}'`;
+  if (company_logo) {
+    var query = `UPDATE project SET project_name = '${project_name}', type_of_project = '${type_of_project}', client_name = '${client_name}', product_name = '${product_name}', company_logo = '${company_logo}' WHERE project_id = '${project_id}'`;
+  } else {
+    console.log("\n\nIMAGE ERROR");
+  }
 
   connectDB.query(query, function (err, result) {
     if (err) {

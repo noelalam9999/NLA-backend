@@ -17,6 +17,7 @@ import {
   getProjectByDateAndName,
   getPinnedProjects,
   getUnPinnedProjects,
+  getProjectsOrderByPin,
 } from "../controllers/projectController.js";
 
 // -----------------------------------------------------------
@@ -54,6 +55,7 @@ router.post("/pin/project", pinOrUnpinProject);
 
 //Get Project(s)
 router.route("/projects").get(getProjects);
+router.route("/projects/order-by-pin/:user_id").get(getProjectsOrderByPin);
 router.route("/projects/:id").get(getProjectByUserId);
 router.route("/project/:project_id").get(getProjectByProjectId);
 

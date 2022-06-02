@@ -18,6 +18,23 @@ const getProjects = asyncHandler(async (req, res) => {
   });
 });
 
+const getProjectsOrderByPin = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
+  // const { project_id } = req.body;
+
+  let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
+  connectDB.query(sql, [req.params.user_id], function (err, rows) {
+    if (err) {
+      throw err;
+    } else {
+      res.send(rows);
+    }
+  });
+});
+
 // @desc    Fecth projects with project id
 // @route   GET /api/project/project_id
 
@@ -639,4 +656,5 @@ export {
   getPinnedProjects,
   getUnPinnedProjects,
   addUnPinnedProject,
+  getProjectsOrderByPin,
 };

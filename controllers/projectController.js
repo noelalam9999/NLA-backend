@@ -641,6 +641,49 @@ const editProject = asyncHandler(async (req, res) => {
   });
 });
 
+const editProjectWithoutImage = asyncHandler(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  // console.log("\nreq.file: ", req.file);
+
+  const {
+    project_name,
+    type_of_project,
+    client_name,
+    product_name,
+    project_id,
+  } = req.body;
+
+  console.log(
+    "After Data: ",
+    project_name,
+    type_of_project,
+    client_name,
+    product_name,
+    project_id
+  );
+
+  // const company_logo = req.file.path;
+  // console.log("After company_logo: ");
+
+  // console.log("\ncompanyLogo: ", company_logo);
+
+  var query = `UPDATE project SET project_name = '${project_name}', type_of_project = '${type_of_project}', client_name = '${client_name}', product_name = '${product_name}' WHERE project_id = '${project_id}'`;
+
+  connectDB.query(query, function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(
+        "Project Edited successfully, Total rows inserted =",
+        result.affectedRows
+      );
+      res.status(200).send("Project Edited successfully");
+    }
+  });
+});
+
 // ***********
 
 export {
@@ -657,4 +700,5 @@ export {
   getUnPinnedProjects,
   addUnPinnedProject,
   getProjectsOrderByPin,
+  editProjectWithoutImage,
 };

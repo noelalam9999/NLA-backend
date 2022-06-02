@@ -18,6 +18,7 @@ import {
   getPinnedProjects,
   getUnPinnedProjects,
   getProjectsOrderByPin,
+  editProjectWithoutImage,
 } from "../controllers/projectController.js";
 
 // -----------------------------------------------------------
@@ -48,6 +49,7 @@ router.post("/add/project", upload.single("company_logo"), addProject);
 
 //Edit Project
 router.post("/edit/project", upload.single("company_logo"), editProject);
+router.post("/edit/image/project", editProjectWithoutImage);
 
 //Pin Projects
 router.post("/pin/project", pinOrUnpinProject);

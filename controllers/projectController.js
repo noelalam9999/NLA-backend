@@ -18,6 +18,8 @@ const getProjects = asyncHandler(async (req, res) => {
   });
 });
 
+// Get Order by Pin
+
 const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
@@ -34,6 +36,100 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
     }
   });
 });
+
+// const getProjectsOrderByPin = asyncHandler(async (req, res) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
+//   res.setHeader("Access-Control-Allow-Headers", "*");
+
+//   let page = req.query.page ? Number(req.query.page) : 1;
+//   const limit = parseInt(req.query.limit);
+
+//   // const { project_id } = req.body;
+
+//   // let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
+//   // connectDB.query(sql, [req.params.user_id], function (err, rows) {
+//   //   if (err) {
+//   //     throw err;
+//   //   } else {
+//   //     res.send(rows);
+//   //   }
+//   // });
+
+//   let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
+//   connectDB.query(sql, [req.params.user_id], function (err, rows) {
+//     if (err) {
+//       throw err;
+//     } else {
+//       const numberOfResults = rows.length;
+//       const numberOfPages = Math.ceil(numberOfResults / limit);
+//       //
+//       if (page > numberOfPages) {
+//         res.send("/?page=" + encodeURIComponent(numberOfPages));
+//       } else if (page < 1) {
+//         res.send("/?page=" + encodeURIComponent("1"));
+//       }
+
+//       // const startingLimit = (page - 1) * limit;
+
+//       const startIndex = (page - 1) * limit;
+//       const endIndex = page * limit;
+
+//       const results = {};
+
+//       if (endIndex < rows.length) {
+//         results.next = {
+//           page: page + 1,
+//           limit: limit,
+//         };
+//       }
+
+//       if (startIndex > 0) {
+//         results.previous = {
+//           page: page - 1,
+//           limit: limit,
+//         };
+//       }
+
+//       // const user_id = req.params.id;
+
+//       let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC LIMIT ${startIndex}, ${endIndex}`;
+
+//       connectDB.query(sql, [req.params.user_id], function (err, rows) {
+//         if (err) {
+//           callback(error, null);
+//           return;
+//         } else {
+//           if (err) throw err;
+//           let iterator = page - 5 < 1 ? 1 : page - 5;
+//           let endingLink =
+//             iterator + 9 <= numberOfPages
+//               ? iterator + 9
+//               : page + (numberOfPages - page);
+
+//           if (endingLink < page + 4) {
+//             iterator -= page + 4 - numberOfPages;
+//           }
+
+//           const data = {
+//             page,
+//             iterator,
+//             endingLink,
+//             numberOfPages,
+//             results,
+//           };
+//           res.send({
+//             rows: rows,
+//             pagination: data,
+//           });
+//           // res.send(rows);
+//         }
+//       });
+
+//       // res.send(rows);
+//     }
+//   });
+// });
 
 // @desc    Fecth projects with project id
 // @route   GET /api/project/project_id
@@ -67,7 +163,7 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
   // const resultsPerPage = 5;
 
   let sql =
-    "SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC";
+    "SELECT * FROM project WHERE user_id = ? AND pin_project = 0 ORDER BY date_created DESC";
   connectDB.query(sql, [req.params.id], function (err, rows) {
     if (err) {
       throw err;
@@ -104,7 +200,7 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
 
       // const user_id = req.params.id;
 
-      let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY date_created DESC LIMIT ${startIndex}, ${endIndex}`;
+      let sql = `SELECT * FROM project WHERE user_id = ? AND pin_project = 0 ORDER BY date_created DESC LIMIT ${startIndex}, ${endIndex}`;
 
       connectDB.query(sql, [req.params.id], function (err, rows) {
         if (err) {

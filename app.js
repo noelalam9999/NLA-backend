@@ -21,8 +21,8 @@ app.use(
   })
 );
 
-// app.use(cors());
-// app.options("*", cors());
+app.use(cors());
+app.options("*", cors());
 
 app.use(morgan("dev"));
 app.use("/uploads", express.static("uploads"));

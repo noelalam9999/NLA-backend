@@ -8,6 +8,32 @@ import mysql from "mysql";
 //   database: "nla_database",
 // });
 
+// =========================================================================
+
+// mySQL Google cloud platform
+// cloud_sql_proxy -instances=nlaanalytics:us-central1:nla-db=tcp:3306
+
+// var conn = mysql.createPool({
+//   socketPath: "nlaanalytics:us-central1:nla-db",
+//   host: "34.134.1.251",
+//   user: "root",
+//   password: "tiger123",
+//   database: "nla_database",
+// });
+
+// conn.query("SELECT 1 + 3 AS solution", function (error, results, fields) {
+//   if (error) {
+//     throw error;
+//   } else {
+//     console.log(
+//       "Database CONNECTED with Google Cloud Platform: ",
+//       results[0].solution
+//     );
+//   }
+// });
+
+// =========================================================================
+
 let conn;
 
 if (process.env.JAWSDB_COBALT_URL) {

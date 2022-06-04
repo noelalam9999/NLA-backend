@@ -1,0 +1,11 @@
+runtime: nodejs
+env: flex
+
+env_variables:
+  SQL_USER: root
+  SQL_PASSWORD: "tiger123"
+  SQL_DATABASE: nla_database
+  INSTANCE_CONNECTION_NAME: nlaanalytics:us-central1:nla-db
+
+beta_settings:
+  cloud_sql_instances: nlaanalytics:us-central1:nla-db

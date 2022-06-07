@@ -178,10 +178,8 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  // const page = parseInt(req.query.page);
-  let page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
-  // const resultsPerPage = 5;
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const limit = Number(req.query.limit);
 
   let sql =
     "SELECT * FROM project WHERE user_id = ? AND pin_project = 0 ORDER BY date_created DESC";

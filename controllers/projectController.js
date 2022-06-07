@@ -11,19 +11,19 @@ const getProjects = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  const page = req.query.page ? Number(req.query.page) : 1;
-  const limit = Number(req.query.limit);
+  // const page = req.query.page ? Number(req.query.page) : 1;
+  // const limit = Number(req.query.limit);
 
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
+  // const startIndex = (page - 1) * limit;
+  // const endIndex = page * limit;
 
   let sql = "SELECT * FROM PROJECT";
   connectDB.query(sql, function (err, rows) {
     if (err) throw err;
 
-    const data = rows.slice(startIndex, endIndex);
-    res.send(data);
-    // res.send(rows);
+    // const data = rows.slice(startIndex, endIndex);
+    // res.send(data);
+    res.send(rows);
   });
 });
 

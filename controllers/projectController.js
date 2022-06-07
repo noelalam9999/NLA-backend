@@ -4,7 +4,7 @@ import connectDB from "../config/db.js";
 // --------------------------------------------------------------------------------------
 
 // @desc    Fecth all projects
-// @route   GET /api/projects
+// @route   GET /api/projects..
 
 const getProjects = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

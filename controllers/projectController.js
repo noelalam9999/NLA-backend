@@ -45,6 +45,8 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   let page = req.query.page ? Number(req.query.page) : 1;
   const limit = parseInt(req.query.limit);
 
+  console.log("Limit: ", limit);
+
   // const { project_id } = req.body;
 
   // let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
@@ -56,7 +58,12 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   //   }
   // });
 
-  let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  // let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
+  let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC LIMIT ${startIndex}, ${endIndex}`;
+
   connectDB.query(sql, [req.params.user_id], function (err, rows) {
     if (err) {
       throw err;
@@ -71,9 +78,6 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
       }
 
       // const startingLimit = (page - 1) * limit;
-
-      const startIndex = (page - 1) * limit;
-      const endIndex = page * limit;
 
       const results = {};
 
@@ -384,11 +388,13 @@ const getProjectByDate = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  const { project_date, user_id } = req.body;
+  const { start_date, end_date, user_id } = req.body;
 
   // let sql = "SELECT * FROM project WHERE DATE(date_created) = ?";
   // let sql = `SELECT * FROM project WHERE DATE(date_created) LIKE '%${project_date}%'`;
-  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND DATE(date_created) LIKE '%${project_date}%' ORDER BY date_created DESC`;
+  // let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND DATE(date_created) LIKE '%${project_date}%' ORDER BY date_created DESC`;
+  let sql = `SELECT * FROM project WHERE user_id = '${user_id}' AND DATE(date_created) BETWEEN '${start_date}' AND '${end_date}' ORDER BY date_created DESC`;
+  // let sql = `SELECT * FROM project WHERE DATE(date_created) >= '${start_date}' AND date_created <= '${end_date}' `;
 
   connectDB.query(sql, function (err, rows) {
     if (err) {

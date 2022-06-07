@@ -13,8 +13,8 @@ import mysql from "mysql";
 // mySQL Google cloud platform
 // cloud_sql_proxy -instances=nlaanalytics:us-central1:nla-db=tcp:3306
 
-// var conn = mysql.createPool({
-//   socketPath: "nlaanalytics:us-central1:nla-db",
+// var conn = mysql.createConnection({
+//   // socketPath: "/cloudsql/nlaanalytics:us-central1:nla-db",
 //   host: "34.134.1.251",
 //   user: "root",
 //   password: "tiger123",

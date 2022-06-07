@@ -54,7 +54,7 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   const page = req.query.page ? Number(req.query.page) : 1;
   const limit = Number(req.query.limit);
 
-  console.log("Limit: ", limit);
+  // console.log("Limit: ", limit);
 
   // const { project_id } = req.body;
 
@@ -80,7 +80,7 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
       throw err;
     } else {
       const numberOfResults = rows.length;
-      console.log("rows.length: ", rows.length);
+      // console.log("rows.length: ", rows.length);
       const numberOfPages = Math.ceil(numberOfResults / limit);
       //
       if (page > numberOfPages) {

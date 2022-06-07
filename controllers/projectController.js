@@ -42,8 +42,8 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
-  let page = req.query.page ? Number(req.query.page) : 1;
-  const limit = parseInt(req.query.limit);
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const limit = Number(req.query.limit);
 
   console.log("Limit: ", limit);
 
@@ -58,6 +58,8 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   //   }
   // });
 
+  //deploy
+
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
@@ -69,6 +71,7 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
       throw err;
     } else {
       const numberOfResults = rows.length;
+      console.log("rows.length: ", rows.length);
       const numberOfPages = Math.ceil(numberOfResults / limit);
       //
       if (page > numberOfPages) {
@@ -104,6 +107,7 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
           callback(error, null);
           return;
         } else {
+          console.log("ssql: ", rows.length);
           if (err) throw err;
           let iterator = page - 5 < 1 ? 1 : page - 5;
           let endingLink =
@@ -162,7 +166,7 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "*");
 
   // const page = parseInt(req.query.page);
-  let page = req.query.page ? Number(req.query.page) : 1;
+  let page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
   // const resultsPerPage = 5;
 

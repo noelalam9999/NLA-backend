@@ -11,10 +11,19 @@ const getProjects = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PUT");
   res.setHeader("Access-Control-Allow-Headers", "*");
 
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const limit = Number(req.query.limit);
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
   let sql = "SELECT * FROM PROJECT";
-  connectDB.query(sql, function (err, results) {
+  connectDB.query(sql, function (err, rows) {
     if (err) throw err;
-    res.send(results);
+
+    const data = rows.slice(startIndex, endIndex);
+    res.send(data);
+    // res.send(rows);
   });
 });
 
@@ -100,7 +109,8 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
 
       // const user_id = req.params.id;
 
-      let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC LIMIT ${startIndex}, ${endIndex}`;
+      let sql =
+        "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
 
       connectDB.query(sql, [req.params.user_id], function (err, rows) {
         if (err) {
@@ -126,8 +136,11 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
             numberOfPages,
             results,
           };
+
+          const rowsData = rows.slice(startIndex, endIndex);
+
           res.send({
-            rows: rows,
+            rows: rowsData,
             pagination: data,
           });
           // res.send(rows);
@@ -208,7 +221,8 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
 
       // const user_id = req.params.id;
 
-      let sql = `SELECT * FROM project WHERE user_id = ? AND pin_project = 0 ORDER BY date_created DESC LIMIT ${startIndex}, ${endIndex}`;
+      let sql =
+        "SELECT * FROM project WHERE user_id = ? AND pin_project = 0 ORDER BY date_created DESC";
 
       connectDB.query(sql, [req.params.id], function (err, rows) {
         if (err) {
@@ -233,10 +247,14 @@ const getProjectByUserId = asyncHandler(async (req, res) => {
             numberOfPages,
             results,
           };
+
+          const rowsData = rows.slice(startIndex, endIndex);
+
           res.send({
-            rows: rows,
+            rows: rowsData,
             pagination: data,
           });
+
           // res.send(rows);
         }
       });

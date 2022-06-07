@@ -63,8 +63,8 @@ const getProjectsOrderByPin = asyncHandler(async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  // let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
-  let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC LIMIT ${startIndex}, ${endIndex}`;
+  let sql = "SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC";
+  // let sql = `SELECT * FROM project WHERE user_id = ? ORDER BY pin_project DESC LIMIT ${startIndex}, ${endIndex}`;
 
   connectDB.query(sql, [req.params.user_id], function (err, rows) {
     if (err) {
